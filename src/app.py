@@ -8,5 +8,9 @@ FRONTEND_PORT = os.getenv("FRONTEND_PORT") or 5000
 
 app = Flask(__name__)
 
+@app.route("/")
+def home():
+    return "Ping!"
+
 if __name__ == "__main__":
-    app.run(port=FRONTEND_PORT)
+    app.run(host="0.0.0.0", port=FRONTEND_PORT)
