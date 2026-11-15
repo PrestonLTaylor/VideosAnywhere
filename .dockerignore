@@ -1,0 +1,16 @@
+/.idea/
+/.vscode/
+/__pycache__/
+/dist/
+/.coverage*
+/htmlcov/
+/.tox/
+/docs/_build/
+/.venv/
+
+# Ignore python tests files
+*/tests/*
+
+.gitignore
+LICNESE
+README.md
