@@ -4,6 +4,7 @@ import os
 
 load_dotenv()
 
+# TODO: Port should be an int, os.getenv returns a string.
 FRONTEND_PORT = os.getenv("FRONTEND_PORT") or 5000
 
 app = Flask(__name__)

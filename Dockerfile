@@ -9,7 +9,7 @@ RUN pip3 install -r requirements.txt
 
 COPY /src /app
 
-# Ensure we expose the right front-end port from the container.
+# Ensure we expose the right front-end port from the container and the app.
 ENV FRONTEND_PORT=6000
 EXPOSE 6000
 
