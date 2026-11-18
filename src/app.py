@@ -4,8 +4,8 @@ import os
 
 load_dotenv()
 
-# TODO: Port should be an int, os.getenv returns a string.
-FRONTEND_PORT = os.getenv("FRONTEND_PORT") or 5000
+frontend_port_env = os.getenv("FRONTEND_PORT") or ""
+FRONTEND_PORT = int(frontend_port_env) if frontend_port_env.isdecimal() else 5000
 
 app = Flask(__name__)
 
