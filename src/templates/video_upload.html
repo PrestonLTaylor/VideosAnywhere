@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} Upload - VideosAnywhere{% endblock %}
+
+{% block content %}
+
+<h1>Upload your video here to be seen Anywhere!</h1>
+
+<form action="" method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    {{ form.raw_video.label }} {{ form.raw_video(accept=".mp4") }}
+
+    {{ form.submit() }}
+</form>
+
+{% endblock %}

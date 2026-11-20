@@ -1,6 +1,7 @@
 from flask import Flask
-from home import add_home_routes
+from home_view import add_home_routes
 from healthcheck import add_healthcheck_routes
+from VideoUpload.video_upload_view import add_video_upload_routes
 
 def add_routes(app: Flask) -> None:
     """
@@ -9,3 +10,4 @@ def add_routes(app: Flask) -> None:
 
     add_home_routes(app)
     add_healthcheck_routes(app)
+    add_video_upload_routes(app)
