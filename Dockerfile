@@ -13,5 +13,8 @@ COPY /src /app
 ENV FRONTEND_PORT=6000
 EXPOSE 6000
 
+# TODO: Tweak HEALTHCHECK as VideosAnywhere develops
+HEALTHCHECK --interval=30s --timeout=15s --start-period=10s CMD wget -O/dev/null -q http://127.0.0.1:6000/health || exit 1
+
 ENTRYPOINT [ "python3" ]
 CMD [ "app.py" ]
