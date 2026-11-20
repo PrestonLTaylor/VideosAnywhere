@@ -1,0 +1,3 @@
+[pytest]
+addopts = ["--import-mode=importlib"] # Noted as a good default from: https://docs.pytest.org/en/stable/explanation/goodpractices.html#which-import-mode
+pythonpath = ["src"]

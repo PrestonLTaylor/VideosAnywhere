@@ -1,5 +1,6 @@
 from flask import Flask
 from home import add_home_routes
+from healthcheck import add_healthcheck_routes
 
 def add_routes(app: Flask) -> None:
     """
@@ -7,3 +8,4 @@ def add_routes(app: Flask) -> None:
     """
 
     add_home_routes(app)
+    add_healthcheck_routes(app)

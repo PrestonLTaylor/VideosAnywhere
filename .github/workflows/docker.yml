@@ -1,0 +1,28 @@
+# Builds, runs and peforms a healthcheck on the VideosAnywhere Dockerfile.
+name: Build, Run and Healthcheck VideosAnywhere Dockerfile
+
+on:
+  push:
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag videosanywhere
+
+    - name: Run the Docker image
+      run: docker run --name test_container -d videosanywhere
+
+# TODO: More robust healthcheck CI action when we use docker compose
+    - name: Perform healthcheck on Docker image
+      shell: bash
+      run: |
+        sleep 10
+        HEALTH=$(docker inspect --format "{{ .State.Health.Status }}" test_container)
+        if [ "$HEALTH" != "healthy" ]; then exit 1; fi
