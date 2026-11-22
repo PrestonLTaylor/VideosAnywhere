@@ -9,3 +9,6 @@ docs/_build/
 .venv/
 .env
 .pytest_cache
+
+# Temporary storage for files for dev testing
+src/static/videos/*
