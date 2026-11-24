@@ -27,11 +27,10 @@ def test_that_video_upload_returns_bad_request_when_no_form_data_is_supplied(cli
 
     # Act
     response = client.post("/video/upload")
-    json = response.get_json()
 
     # Assert
     assert response.status_code == 400, "Response from POST with no video file was not 400 Bad Request."
-    assert "errors" in json, "Response from POST did not set validation errors correctly."
+    assert "The CSRF token is missing" in response.text, "Response from POST did not set validation errors correctly."
 
 def test_that_video_upload_returns_bad_request_when_no_csrf_token_is_supplied(client: FlaskClient, valid_video: tuple[BytesIO, str]):
     # Arrange
@@ -39,12 +38,10 @@ def test_that_video_upload_returns_bad_request_when_no_csrf_token_is_supplied(cl
 
     # Act
     response = client.post("/video/upload", content_type="multipart/form-data", data=test_form_data)
-    json = response.get_json()
 
     # Assert
     assert response.status_code == 400, "Response from POST with no video file was not 400 Bad Request."
-    assert "errors" in json, "Response from POST did not set validation errors correctly."
-    assert "csrf_token" in json["errors"], "Response did not validate that a missing CSRF token is an error."
+    assert "The CSRF token is missing" in response.text, "Response from POST did not set validation errors correctly."
 
 def test_that_video_upload_returns_bad_request_when_no_video_file_is_supplied(client: FlaskClient):
     # Arrange
