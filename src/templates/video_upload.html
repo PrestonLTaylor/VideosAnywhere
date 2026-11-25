@@ -8,28 +8,49 @@
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
-
 <h1>Upload your video here to be seen Anywhere!</h1>
 
-<form action="{{ url_for("video_upload_post") }}" class="dropzone" id="dropzone-video-upload" method="POST" enctype="multipart/form-data">
+<form action="{{ url_for("video_upload_part") }}" class="dropzone" id="dropzone-video-upload" method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
+
+    <!-- Set when upload is clicked, ensures the same video's chunks are uploaded to the same file. -->
+     {{ form.video_upload_id() }}
 </form>
 
 {{ form.submit() }}
 
 <script>
+    const csrfToken = document.querySelector("meta[name=\"csrf-token\"]");
+    const videoUploadId = document.querySelector("#video_upload_id");
+
+    // TODO: Clean up into functions
     Dropzone.options.dropzoneVideoUpload = {
-        paramName: "raw_video",
+        paramName: "video_chunk",
         acceptedFiles: ".mp4",
+
+        chunking: true,
 
         // Prevent uploading of videos as soon as the user adds the file
         autoProcessQueue: false,
+
+        // Setup CSRF token headers
+        headers: { "X-CSRFToken": csrfToken.content },
 
         init: () => {
             let dropzone = Dropzone.forElement("#dropzone-video-upload");
 
             // Setup dropzone to only upload when the form's submit is pressed
-            document.querySelector("input[type=submit]").addEventListener("click", (e) => {
+            document.querySelector("input[type=submit]").addEventListener("click", async (e) => {
+                // Initialize the multi-part upload before starting the queue and set the video upload ID.
+                await fetch("{{ url_for("video_upload_start") }}", {
+                    method: "POST",
+                    headers: { "X-CSRFToken": csrfToken.content }
+                })
+                .then((response) => response.json())
+                .then((json) => {
+                    videoUploadId.value = json.video_upload_id
+                });
+
                 e.preventDefault();
                 e.stopPropagation();
                 dropzone.processQueue();
@@ -55,6 +76,16 @@
                 for (let node of file.previewElement.querySelectorAll("[data-dz-errormessage]")) {
                     node.textContent = error_string;
                 }
+            });
+
+            // Setup completion to tell the server the upload has finished
+            dropzone.on("success", async (_) => {
+                // TODO: Redirect to video or similar from location header.
+                await fetch("{{ url_for("video_upload_end") }}", {
+                    method: "POST",
+                    headers: { "X-CSRFToken": csrfToken.content, "Content-Type": "application/json" },
+                    body: JSON.stringify({ "video_upload_id": videoUploadId.value })
+                });
             });
         },
 
